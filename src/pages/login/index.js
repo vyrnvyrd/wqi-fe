@@ -4,9 +4,20 @@ import Toast from "../../components/Toast";
 import { toast } from 'react-toastify';
 import { post } from "../../api";
 import apiUrls from "../../constant/apiUrls";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('authenticated')
+    if (isAuthenticated) {
+      navigate('/manage-water');
+      return
+    }
+  }, [])
 
   const onLogin = () => {
     if (!form?.getFieldsValue()?.username || !form?.getFieldsValue()?.password) {
@@ -23,6 +34,7 @@ const Login = () => {
       if (status === 200) {
         toast.success(<Toast message='Success' detailedMessage={response?.data?.detail} />);
         localStorage.setItem('authenticated', true)
+        navigate('/manage-water')
       } else {
         toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
       }
