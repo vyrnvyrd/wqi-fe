@@ -1,9 +1,25 @@
 import './App.css';
+import { useRoutes } from 'react-router';
+import Routes from './routes';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
+const App = () => {
   return (
-    <div></div>
+    <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        draggable
+        pauseOnHover
+        theme="colored" />
+      {useRoutes(Routes())}
+    </div>
   );
-}
+};
 
 export default App;
