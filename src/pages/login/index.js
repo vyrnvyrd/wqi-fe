@@ -2,6 +2,8 @@ import { images } from "../../constant";
 import { Input, Form, Button, ConfigProvider } from "antd";
 import Toast from "../../components/Toast";
 import { toast } from 'react-toastify';
+import { post } from "../../api";
+import apiUrls from "../../constant/apiUrls";
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -12,7 +14,19 @@ const Login = () => {
       return
     }
 
-    console.log(form?.getFieldsValue())
+    const body = {
+      username: form?.getFieldsValue()?.username,
+      password: form?.getFieldsValue()?.password
+    }
+    post(apiUrls.LOGIN_URL, body).then(async response => {
+      const { status } = response
+      if (status === 200) {
+        toast.success(<Toast message='Success' detailedMessage={response?.data?.detail} />);
+        localStorage.setItem('authenticated', true)
+      } else {
+        toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+      }
+    })
   }
 
   return (
@@ -22,7 +36,7 @@ const Login = () => {
           <div>
             <img src={images.logo} alt="img-login" className="m-auto"></img>
             <p className="text-center text-[30px] font-bold">Welcome Back</p>
-            <Form className="mt-10" onFinish={onLogin} form={form}>
+            <Form className="mt-10" form={form}>
               <Form.Item
                 rules={[{ required: true, message: 'Username is required!' }]}
                 className="mb-4"
