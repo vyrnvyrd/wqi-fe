@@ -12,6 +12,8 @@ const Base = () => {
     key: 'logout',
     label: 'Logout'
   }]);
+  const isAuthenticated = localStorage.getItem('authenticated')
+  const dataUser = JSON.parse(localStorage.getItem('data'))
 
   const onClick = ({ key }) => {
     localStorage.clear()
@@ -19,7 +21,6 @@ const Base = () => {
   };
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('authenticated')
     if (!isAuthenticated) {
       navigate('/login')
       return
@@ -33,8 +34,8 @@ const Base = () => {
           <div className="mr-[40px] flex text-white">
             <Avatar size={50} className="bg-white" icon={<UserOutlined className="text-[#FA9746]" />} />
             <div className="ml-[15px] my-auto">
-              <p className="font-bold">Firna Firdiani</p>
-              <p className="text-[14px]">Admin</p>
+              <p className="font-bold">{dataUser?.username}</p>
+              <p className="text-[14px]">{dataUser?.role}</p>
             </div>
             <DownOutlined className="ml-[70px] text-[#FA9746] my-auto text-[20px] cursor-pointer" />
           </div>
@@ -48,14 +49,14 @@ const Base = () => {
         <div className="flex justify-center mt-[20px]">
           <img src={images.logo_2} className="w-[50px]"></img>
         </div>
-        <div className={`mt-[50px] mx-[17px] ${pathname === '/manage-water' ? 'text-[#2B468B]' : 'text-white'}`}>
+        <div className={`mt-[50px] mx-[18px] ${pathname === '/manage-water' ? 'text-[#2B468B]' : 'text-white'}`}>
           <div className={
             `flex cursor-pointer 
             ${pathname === '/manage-water' ? 'bg-white rounded-lg py-2' : ''}
             ${isExpand ? 'w-full' : 'w-[40px]'}`
           }>
             <div className="w-[50px] flex justify-center">
-              <FileTextOutlined className="text-[40px]" />
+              <FileTextOutlined className="text-[30px]" />
             </div>
             {
               isExpand ?
