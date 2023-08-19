@@ -34,6 +34,7 @@ const Login = () => {
       if (status === 200) {
         toast.success(<Toast message='Success' detailedMessage={response?.data?.detail} />);
         localStorage.setItem('authenticated', true)
+        localStorage.setItem('data', JSON.stringify(response?.data?.data))
         navigate('/manage-water')
       } else {
         toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
