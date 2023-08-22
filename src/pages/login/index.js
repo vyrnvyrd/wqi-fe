@@ -51,14 +51,14 @@ const Login = () => {
             <p className="text-center text-[30px] font-bold">Welcome Back</p>
             <Form className="mt-10" form={form}>
               <Form.Item
-                rules={[{ required: true, message: 'Username is required!' }]}
+                rules={[{ required: true, message: 'Username wajib diisi!' }]}
                 className="mb-4"
                 name="username"
               >
                 <Input placeholder="Username" className="h-[40px]"></Input>
               </Form.Item>
               <Form.Item
-                rules={[{ required: true, message: 'Password is required!' }]}
+                rules={[{ required: true, message: 'Password wajib diisi!' }]}
                 name='password'
               >
                 <Input.Password placeholder="Password" className="h-[40px]"></Input.Password>
