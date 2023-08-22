@@ -3,32 +3,15 @@ import { InboxOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router";
 import Toast from "../../../components/Toast";
 import { toast } from 'react-toastify';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const ManageWaterForm = () => {
   const navigate = useNavigate()
   const [formInfoWater] = Form.useForm()
   const { TextArea } = Input;
   const { Dragger } = Upload;
-  const props = {
-    name: 'file',
-    multiple: true,
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
-    },
-  };
+  const [optKecamatan, setOptKecamatan] = useState([]);
+  const [optKelurahan, setOptKelurahan] = useState([]);
   const optionsKota = [
     {
       value: '3273',
@@ -51,8 +34,25 @@ const ManageWaterForm = () => {
     })
   }
 
+  const getKecamatan = async () => {
+    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/3273.json`)
+      .then(response => response.json())
+      .then(districts => {
+        setOptKecamatan([...districts.map(el => ({ value: el?.id, label: el?.name }))])
+      });
+  }
+
+  const getKelurahan = async (id) => {
+    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`)
+      .then(response => response.json())
+      .then(villages => {
+        setOptKelurahan([...villages.map(el => ({ value: el?.id, label: el?.name }))])
+      });
+  }
+
   useEffect(() => {
     setInitialValue();
+    getKecamatan();
   }, [])
 
   return (
@@ -97,6 +97,8 @@ const ManageWaterForm = () => {
               <Select
                 className="font-normal"
                 placeholder="Pilih kecamatan"
+                options={optKecamatan}
+                onChange={getKelurahan}
               />
             </Form.Item>
             <Form.Item
@@ -108,6 +110,8 @@ const ManageWaterForm = () => {
               <Select
                 className="font-normal"
                 placeholder="Pilih kelurahan"
+                options={optKelurahan}
+                disabled={!formInfoWater?.getFieldsValue()?.kecamatan}
               />
             </Form.Item>
             <Form.Item
@@ -119,33 +123,29 @@ const ManageWaterForm = () => {
               <TextArea
                 className="font-normal"
                 placeholder="Isi alamat"
-                style={{ height: '172px' }}
+                style={{ height: '181px' }}
               />
             </Form.Item>
-            <div className="grid grid-cols-3 gap-x-5">
-              <Form.Item
-                label="Unggah Dokumen"
-                className="font-bold col-span-2"
-                name='dokumen'
-                rules={[{ required: true, message: 'Dokumen wajib diisi!' }]}
+            <Form.Item
+              label="Unggah Dokumen"
+              className="font-bold"
+              name='dokumen'
+              rules={[{ required: true, message: 'Dokumen wajib diisi!' }]}
+            >
+              <Dragger
+                style={{ backgroundColor: 'white', padding: '5px' }}
+                maxCount={1}
+                accept=".pdf"
               >
-                <Dragger {...props} style={{ backgroundColor: 'white' }}>
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">Klik atau seret file ke area ini untuk mengunggah</p>
-                  <p className="ant-upload-hint">
-                    Dukungan untuk satu unggahan. Dilarang keras mengunggah data perusahaan atau file terlarang lainnya.
-                  </p>
-                </Dragger>
-              </Form.Item>
-              <div>
-                <p className="font-bold">Lampiran</p>
-                <div className="bg-white rounded-xl mt-2 h-[170px] flex justify-center items-center">
-                  <p className="font-bold">Belum Tersedia</p>
-                </div>
-              </div>
-            </div>
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">Klik atau seret file ke area ini untuk mengunggah</p>
+                <p className="ant-upload-hint">
+                  Dukungan untuk satu unggahan. Dilarang keras mengunggah data perusahaan atau file terlarang lainnya.
+                </p>
+              </Dragger>
+            </Form.Item>
           </div>
         </div>
         <div className="bg-[#EAF3FA] rounded-xl mt-10 p-3">
