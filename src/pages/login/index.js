@@ -21,7 +21,7 @@ const Login = () => {
 
   const onLogin = () => {
     if (!form?.getFieldsValue()?.username || !form?.getFieldsValue()?.password) {
-      toast.error(<Toast message='Error' detailedMessage='Username/password is required!' />);
+      toast.error(<Toast message='Error' detailedMessage='Username/password wajib diisi!' />);
       return
     }
 
