@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import Login from '../pages/login';
 import ManageWater from '../pages/manage_water';
+import ManageWaterForm from '../pages/manage_water/form';
 import Base from '../pages/base';
 
 const Routes = () => {
@@ -23,7 +24,15 @@ const Routes = () => {
         {
           path: '',
           element: <ManageWater />
-        }
+        },
+        {
+          path: 'create',
+          element: <ManageWaterForm />
+        },
+        {
+          path: 'edit/:id',
+          element: <ManageWaterForm />
+        },
       ]
     },
     {

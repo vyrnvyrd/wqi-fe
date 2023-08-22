@@ -46,3 +46,25 @@ html {
 .bg-login-img {
   background-image: url('/src/assets/img/bg-login.svg');
 }
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  height: 40px !important;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-select-single .ant-select-selector .ant-select-selection-item,
+:where(.css-dev-only-do-not-override-byeoj0).ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  line-height: 40px !important;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-input-number .ant-input-number-input {
+  line-height: 30px;
+}
+
+textarea {
+  resize: none !important;
+}
+
+.button-cancel {
+  border: 2px solid #FA9746;
+  color: #FA9746;
+}

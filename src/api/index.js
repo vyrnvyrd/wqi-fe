@@ -1,5 +1,6 @@
 import { handleParam, handleQuery } from './handler'
 import httpInstance from './httpInstance'
+import httpInstanceWilayah from './httpInstanceWilayah'
 const _ = require('lodash')
 
 const request = async config => {
@@ -11,6 +12,27 @@ const request = async config => {
     }
 
   return httpInstance.request(_.pick(config, ['url', 'method', 'data', 'headers', 'responseType']))
+}
+
+const requestWilayah = async config => {
+
+  config.headers = config.headers
+    ? config.headers
+    : {
+      'Cache-Control': 'no-store',
+    }
+
+  return httpInstanceWilayah.request(_.pick(config, ['url', 'method', 'data', 'headers', 'responseType']))
+}
+
+export const getWilayah = async (url, opts = {}) => {
+  const options = {
+    method: 'get',
+    url: `${handleParam(url, opts.params)}${handleQuery(opts.query)}`,
+    headers: opts.headers,
+    responseType: opts.responseType
+  }
+  return requestWilayah(options)
 }
 
 export const get = async (url, opts = {}) => {

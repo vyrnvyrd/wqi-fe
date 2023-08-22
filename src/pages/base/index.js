@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, Outlet } from "react-router";
 import { images } from "../../constant";
 import { Avatar, Dropdown } from "antd";
 import { UserOutlined, DownOutlined, FileTextOutlined } from '@ant-design/icons';
@@ -29,7 +29,7 @@ const Base = () => {
 
   return (
     <div>
-      <div className="mr-[20px] w-screen fixed bg-[#2B468B] h-[70px] border-b-2 border-amber-500 flex justify-end items-center">
+      <div className="mr-[20px] w-screen fixed bg-[#2B468B] h-[70px] border-b-2 border-amber-500 flex justify-end items-center z-10">
         <Dropdown menu={{ items, onClick }} trigger={['click']}>
           <div className="mr-[40px] flex text-white">
             <Avatar size={50} className="bg-white" icon={<UserOutlined className="text-[#FA9746]" />} />
@@ -42,14 +42,16 @@ const Base = () => {
         </Dropdown>
       </div>
       <div
-        className={`md:bg-[#2B468B] md:w-[80px] ${isExpand ? 'md:w-[300px]' : ''} md:fixed md:h-screen border-r-2 border-amber-500 transition-all duration-500 ease-in-out`}
-        onMouseEnter={() => setIsExpand(!isExpand)}
-        onMouseLeave={() => setIsExpand(!isExpand)}
+        className={`md:bg-[#2B468B] ${isExpand ? 'md:w-[300px]' : 'md:w-[80px]'} md:fixed md:h-screen border-r-2 border-amber-500 transition-all duration-500 ease-in-out z-10`}
+        onMouseEnter={() => setIsExpand(true)}
+        onMouseLeave={() => setIsExpand(false)}
       >
         <div className="flex justify-center mt-[20px]">
           <img src={images.logo_2} className="w-[50px]"></img>
         </div>
-        <div className={`mt-[50px] mx-[18px] ${pathname === '/manage-water' ? 'text-[#2B468B]' : 'text-white'}`}>
+        <div className={`mt-[50px] mx-[18px] ${pathname === '/manage-water' ? 'text-[#2B468B]' : 'text-white'}`}
+          onClick={() => navigate('/manage-water')}
+        >
           <div className={
             `flex cursor-pointer 
             ${pathname === '/manage-water' ? 'bg-white rounded-lg py-2' : ''}
@@ -60,81 +62,14 @@ const Base = () => {
             </div>
             {
               isExpand ?
-                <p className="ml-[20px] my-auto truncate">Manage Water Quality</p> :
+                <p className="ml-[20px] my-auto truncate">Kelola Kualitas Air</p> :
                 <></>
             }
           </div>
         </div>
       </div>
-      <div className="ml-[90px] pt-[80px] pb-[30px] h-screen overflow-auto z-5">
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tess</div>
-        <div>tessaaaaa</div>
+      <div className="ml-[100px] mr-[20px] pt-[80px] pb-[30px] h-screen overflow-auto">
+        <Outlet />
       </div>
     </div>
   )
