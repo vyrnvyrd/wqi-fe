@@ -3,6 +3,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router";
 import Toast from "../../../components/Toast";
 import { toast } from 'react-toastify';
+import { useEffect } from "react";
 
 const ManageWaterForm = () => {
   const navigate = useNavigate()
@@ -43,6 +44,17 @@ const ManageWaterForm = () => {
     toast.error(<Toast message='Error' detailedMessage='Field wajib diisi!' />);
   }
 
+  const setInitialValue = () => {
+    formInfoWater.setFieldsValue({
+      ...formInfoWater,
+      kota: '3273'
+    })
+  }
+
+  useEffect(() => {
+    setInitialValue();
+  }, [])
+
   return (
     <div>
       <Form form={formInfoWater} layout="vertical" onFinishFailed={onFinishFailed}>
@@ -73,7 +85,6 @@ const ManageWaterForm = () => {
               <Select
                 className="font-normal"
                 disabled
-                value={'3273'}
                 options={optionsKota}
               />
             </Form.Item>
