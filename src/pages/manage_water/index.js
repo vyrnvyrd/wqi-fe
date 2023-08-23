@@ -1,20 +1,30 @@
 import { Button, ConfigProvider, Table } from "antd";
 import { useNavigate } from "react-router";
+import { get } from "../../api";
+import { apiUrls } from "../../constant";
+import { useEffect, useState } from "react";
+import Toast from "../../components/Toast";
+import { toast } from 'react-toastify';
+import { FolderOpenOutlined } from '@ant-design/icons';
 
 const ManageWater = () => {
   const navigate = useNavigate()
+  const [data, setData] = useState([])
 
   const columns = [
     {
       title: 'Nama Sumur',
+      key: 'nama_sumur',
       dataIndex: 'nama_sumur',
     },
     {
       title: 'Alamat Sumur',
+      key: 'alamat',
       dataIndex: 'alamat',
     },
     {
       title: 'Kualitas Air',
+      key: 'class_data',
       dataIndex: 'class_data',
       render: (data, record) => {
         return (
@@ -29,17 +39,40 @@ const ManageWater = () => {
               `
             }
           >
-            {record?.status_view}
+            {data === 0 ? 'Good' : data === 1 ? 'Slightly Polluted' : data === 2 ? 'Fairly Polluted' : 'Heavily Polluted'}
           </div>
         );
       }
     },
     {
       title: 'Action',
+      key: 'id',
       dataIndex: 'id',
-
+      render: (data) => (
+        <FolderOpenOutlined
+          style={{ fontSize: '30px' }}
+          className='text-[#FA9746] cursor-pointer'
+          onClick={() => { navigate(`/manage-water/edit/${data}`) }}
+        />
+      ),
     },
   ];
+
+  const fetchList = () => {
+    get(apiUrls.WATER_QUALITY_URL).then(async response => {
+      const { status } = response
+      if (status === 200) {
+        setData(response.data)
+      } else {
+        toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+      }
+    })
+  }
+
+  useEffect(() => {
+    fetchList()
+  }, [])
+
   return (
     <div>
       <div>
@@ -62,6 +95,8 @@ const ManageWater = () => {
         <Table
           className="mt-5"
           columns={columns}
+          dataSource={data.items}
+          pagination={data}
         />
       </div>
     </div>

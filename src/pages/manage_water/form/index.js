@@ -1,6 +1,6 @@
 import { Input, Form, Select, Upload, InputNumber, ConfigProvider, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Toast from "../../../components/Toast";
 import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { post } from '../../../api'
 import { apiUrls } from "../../../constant";
 
 const ManageWaterForm = () => {
+  const { pathname } = useLocation();
   const navigate = useNavigate()
   const [formInfoWater] = Form.useForm()
   const { TextArea } = Input;
@@ -17,6 +18,7 @@ const ManageWaterForm = () => {
   const [selectedKecamatan, setSelectedKecamatan] = useState({});
   const [selectedKelurahan, setSelectedKelurahan] = useState({});
   const [idDokumen, setIdDokumen] = useState('');
+  const [title, setTitle] = useState('Tambah Data');
   const optionsKota = [
     {
       value: '3273',
@@ -122,8 +124,15 @@ const ManageWaterForm = () => {
     }
   }
 
+  const setTitlePage = () => {
+    if (pathname.includes('edit')) {
+      setTitle('Edit Data')
+    }
+  }
+
   useEffect(() => {
     setInitialValue();
+    setTitlePage();
     getKecamatan();
   }, [])
 
@@ -132,7 +141,7 @@ const ManageWaterForm = () => {
       <Form form={formInfoWater} layout="vertical" onFinishFailed={onFinishFailed}>
         <div>
           <p className="text-[25px] font-bold">Kelola Kualitas Air</p>
-          <p className="text-[15px]"><span className="text-[#FA9746]">Kelola Kualitas Air </span>/<span className="text-[#808080]"> Tambah Data</span></p>
+          <p className="text-[15px]"><span className="text-[#FA9746]">Kelola Kualitas Air </span>/<span className="text-[#808080]"> {title}</span></p>
         </div>
 
         <div className="bg-[#EAF3FA] rounded-xl mt-10 p-3">
