@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 import Toast from "../../../components/Toast";
 import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
+import { post } from '../../../api'
+import { apiUrls } from "../../../constant";
 
 const ManageWaterForm = () => {
   const navigate = useNavigate()
@@ -12,6 +14,7 @@ const ManageWaterForm = () => {
   const { Dragger } = Upload;
   const [optKecamatan, setOptKecamatan] = useState([]);
   const [optKelurahan, setOptKelurahan] = useState([]);
+  const [idDokumen, setIdDokumen] = useState('');
   const optionsKota = [
     {
       value: '3273',
@@ -48,6 +51,31 @@ const ManageWaterForm = () => {
       .then(villages => {
         setOptKelurahan([...villages.map(el => ({ value: el?.id, label: el?.name }))])
       });
+  }
+
+  const uploadFile = async (opt) => {
+    const { onSuccess, onError, file } = opt;
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const base64String = e.target.result.split(",")[1];
+        const body = {
+          file: base64String
+        }
+        post(apiUrls.DOKUMEN_URL, body).then(async response => {
+          const { status } = response
+          if (status === 200) {
+            setIdDokumen(response?.data?.id)
+            onSuccess()
+          } else {
+            onError();
+            toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+          }
+        })
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   useEffect(() => {
@@ -136,6 +164,7 @@ const ManageWaterForm = () => {
                 style={{ backgroundColor: 'white', padding: '5px' }}
                 maxCount={1}
                 accept=".pdf"
+                customRequest={uploadFile}
               >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
