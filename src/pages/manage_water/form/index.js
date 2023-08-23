@@ -14,6 +14,8 @@ const ManageWaterForm = () => {
   const { Dragger } = Upload;
   const [optKecamatan, setOptKecamatan] = useState([]);
   const [optKelurahan, setOptKelurahan] = useState([]);
+  const [selectedKecamatan, setSelectedKecamatan] = useState({});
+  const [selectedKelurahan, setSelectedKelurahan] = useState({});
   const [idDokumen, setIdDokumen] = useState('');
   const optionsKota = [
     {
@@ -23,7 +25,37 @@ const ManageWaterForm = () => {
   ]
 
   const onSubmit = () => {
-    console.log('here')
+    let body = {
+      nama_sumur: formInfoWater?.getFieldsValue()?.nama_sumur,
+      id_kota: optionsKota[0]?.value,
+      nama_kota: optionsKota[0]?.label,
+      id_kecamatan: selectedKecamatan?.value,
+      nama_kecamatan: selectedKecamatan?.label,
+      id_kelurahan: selectedKelurahan?.value,
+      nama_kelurahan: selectedKelurahan?.label,
+      alamat: formInfoWater?.getFieldsValue()?.alamat,
+      id_dokumen: idDokumen,
+      zat_organik: formInfoWater?.getFieldsValue()?.zat_organik,
+      tds: formInfoWater?.getFieldsValue()?.tds,
+      mangan: formInfoWater?.getFieldsValue()?.mangan,
+      klorida: formInfoWater?.getFieldsValue()?.klorida,
+      kekeruhan: formInfoWater?.getFieldsValue()?.kekeruhan,
+      fluorida: formInfoWater?.getFieldsValue()?.fluorida,
+      ph: formInfoWater?.getFieldsValue()?.ph,
+      kesadahan: formInfoWater?.getFieldsValue()?.kesadahan,
+      sulfat: formInfoWater?.getFieldsValue()?.sulfat,
+      suhu: formInfoWater?.getFieldsValue()?.suhu
+    };
+
+    post(apiUrls.WATER_QUALITY_URL, body).then(async response => {
+      const { status } = response
+      if (status === 200) {
+        toast.success(<Toast message='Success' detailedMessage='Berhasil menyimpan data' />);
+        navigate('/manage-water')
+      } else {
+        toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+      }
+    })
   }
 
   const onFinishFailed = () => {
@@ -46,11 +78,23 @@ const ManageWaterForm = () => {
   }
 
   const getKelurahan = async (id) => {
+    const found = optKecamatan.findIndex(el => el?.value === id)
+    if (found !== -1) {
+      setSelectedKecamatan(optKecamatan[found])
+    }
+
     fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`)
       .then(response => response.json())
       .then(villages => {
         setOptKelurahan([...villages.map(el => ({ value: el?.id, label: el?.name }))])
       });
+  }
+
+  const onChangeKelurahan = async (id) => {
+    const found = optKelurahan.findIndex(el => el?.value === id)
+    if (found !== -1) {
+      setSelectedKelurahan(optKecamatan[found])
+    }
   }
 
   const uploadFile = async (opt) => {
@@ -81,7 +125,7 @@ const ManageWaterForm = () => {
   useEffect(() => {
     setInitialValue();
     getKecamatan();
-  })
+  }, [])
 
   return (
     <div>
@@ -138,6 +182,7 @@ const ManageWaterForm = () => {
               <Select
                 className="font-normal"
                 placeholder="Pilih kelurahan"
+                onChange={onChangeKelurahan}
                 options={optKelurahan}
                 disabled={!formInfoWater?.getFieldsValue()?.kecamatan}
               />

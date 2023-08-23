@@ -25,7 +25,7 @@ const Base = () => {
       navigate('/login')
       return
     }
-  })
+  }, [])
 
   return (
     <div>
