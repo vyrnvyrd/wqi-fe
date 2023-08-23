@@ -8,7 +8,7 @@ const Base = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [isExpand, setIsExpand] = useState(false);
-  const [items, setItems] = useState([{
+  const [items] = useState([{
     key: 'logout',
     label: 'Logout'
   }]);
@@ -25,7 +25,7 @@ const Base = () => {
       navigate('/login')
       return
     }
-  }, [])
+  })
 
   return (
     <div>
@@ -47,7 +47,7 @@ const Base = () => {
         onMouseLeave={() => setIsExpand(false)}
       >
         <div className="flex justify-center mt-[20px]">
-          <img src={images.logo_2} className="w-[50px]"></img>
+          <img alt="logo" src={images.logo_2} className="w-[50px]"></img>
         </div>
         <div className={`mt-[50px] mx-[18px] ${pathname === '/manage-water' ? 'text-[#2B468B]' : 'text-white'}`}
           onClick={() => navigate('/manage-water')}

@@ -1,4 +1,4 @@
-import { Input, Form, Select, Upload, message, InputNumber, ConfigProvider, Button } from "antd";
+import { Input, Form, Select, Upload, InputNumber, ConfigProvider, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router";
 import Toast from "../../../components/Toast";
@@ -53,7 +53,7 @@ const ManageWaterForm = () => {
   useEffect(() => {
     setInitialValue();
     getKecamatan();
-  }, [])
+  })
 
   return (
     <div>

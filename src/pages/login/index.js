@@ -17,7 +17,7 @@ const Login = () => {
       navigate('/manage-water');
       return
     }
-  }, [])
+  })
 
   const onLogin = () => {
     if (!form?.getFieldsValue()?.username || !form?.getFieldsValue()?.password) {
