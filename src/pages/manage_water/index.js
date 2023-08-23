@@ -1,8 +1,45 @@
-import { Button, ConfigProvider } from "antd";
+import { Button, ConfigProvider, Table } from "antd";
 import { useNavigate } from "react-router";
 
 const ManageWater = () => {
   const navigate = useNavigate()
+
+  const columns = [
+    {
+      title: 'Nama Sumur',
+      dataIndex: 'nama_sumur',
+    },
+    {
+      title: 'Alamat Sumur',
+      dataIndex: 'alamat',
+    },
+    {
+      title: 'Kualitas Air',
+      dataIndex: 'class_data',
+      render: (data, record) => {
+        return (
+          <div
+            className={
+              `
+                ml-3 py-1 px-2  rounded-lg border border-solid text-xs text-center
+                ${data === 0 ? 'border-[#52C41A] text-[#52C41A] bg-[#B7EB8F]/20' : ''}
+                ${data === 1 ? 'border-[#2F54EB] text-[#2F54EB] bg-[#ADC6FF]/20' : ''}
+                ${data === 2 ? 'border-[#FA9746] text-[#FA9746] bg-[#FFE89E]/20' : ''}
+                ${data === 3 ? 'border-[#F5222D] text-[#F5222D] bg-[#FFA39E]/20' : ''}
+              `
+            }
+          >
+            {record?.status_view}
+          </div>
+        );
+      }
+    },
+    {
+      title: 'Action',
+      dataIndex: 'id',
+
+    },
+  ];
   return (
     <div>
       <div>
@@ -21,6 +58,11 @@ const ManageWater = () => {
             Tambah Data
           </Button>
         </ConfigProvider>
+
+        <Table
+          className="mt-5"
+          columns={columns}
+        />
       </div>
     </div>
   )
