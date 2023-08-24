@@ -95,7 +95,7 @@ const ManageWaterForm = () => {
   const onChangeKelurahan = async (id) => {
     const found = optKelurahan.findIndex(el => el?.value === id)
     if (found !== -1) {
-      setSelectedKelurahan(optKecamatan[found])
+      setSelectedKelurahan(optKelurahan[found])
     }
   }
 
@@ -107,7 +107,8 @@ const ManageWaterForm = () => {
       reader.onload = function (e) {
         const base64String = e.target.result.split(",")[1];
         const body = {
-          file: base64String
+          file: base64String,
+          title: file?.name
         }
         post(apiUrls.DOKUMEN_URL, body).then(async response => {
           const { status } = response
