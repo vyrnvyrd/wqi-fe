@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import Toast from "../../../components/Toast";
 import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
-import { post, get } from '../../../api'
+import { post, get, put } from '../../../api'
 import { apiUrls } from "../../../constant";
 
 const ManageWaterForm = () => {
@@ -21,6 +21,7 @@ const ManageWaterForm = () => {
   const [idDokumen, setIdDokumen] = useState('');
   const [title, setTitle] = useState('Tambah Data');
   const [dataFile, setDataFile] = useState({})
+  const [existingData, setExistingData] = useState({})
   const optionsKota = [
     {
       value: '3273',
@@ -29,36 +30,54 @@ const ManageWaterForm = () => {
   ]
 
   const onSubmit = () => {
-    let body = {
-      nama_sumur: formInfoWater?.getFieldsValue()?.nama_sumur,
-      id_kota: optionsKota[0]?.value,
-      nama_kota: optionsKota[0]?.label,
-      id_kecamatan: selectedKecamatan?.value,
-      nama_kecamatan: selectedKecamatan?.label,
-      id_kelurahan: selectedKelurahan?.value,
-      nama_kelurahan: selectedKelurahan?.label,
-      alamat: formInfoWater?.getFieldsValue()?.alamat,
-      id_dokumen: idDokumen,
-      zat_organik: formInfoWater?.getFieldsValue()?.zat_organik,
-      tds: formInfoWater?.getFieldsValue()?.tds,
-      mangan: formInfoWater?.getFieldsValue()?.mangan,
-      klorida: formInfoWater?.getFieldsValue()?.klorida,
-      kekeruhan: formInfoWater?.getFieldsValue()?.kekeruhan,
-      fluorida: formInfoWater?.getFieldsValue()?.fluorida,
-      ph: formInfoWater?.getFieldsValue()?.ph,
-      kesadahan: formInfoWater?.getFieldsValue()?.kesadahan,
-      sulfat: formInfoWater?.getFieldsValue()?.sulfat,
-      suhu: formInfoWater?.getFieldsValue()?.suhu
-    };
+    formInfoWater.validateFields().then((values) => {
+      let body = {
+        nama_sumur: formInfoWater?.getFieldsValue()?.nama_sumur,
+        id_kota: optionsKota[0]?.value,
+        nama_kota: optionsKota[0]?.label,
+        id_kecamatan: selectedKecamatan?.value || existingData?.id_kecamatan,
+        nama_kecamatan: selectedKecamatan?.label || existingData?.nama_kecamatan,
+        id_kelurahan: selectedKelurahan?.value || existingData?.id_kelurahan,
+        nama_kelurahan: selectedKelurahan?.label || existingData?.nama_kelurahan,
+        alamat: formInfoWater?.getFieldsValue()?.alamat,
+        id_dokumen: idDokumen || existingData?.id_dokumen,
+        zat_organik: formInfoWater?.getFieldsValue()?.zat_organik,
+        tds: formInfoWater?.getFieldsValue()?.tds,
+        mangan: formInfoWater?.getFieldsValue()?.mangan,
+        klorida: formInfoWater?.getFieldsValue()?.klorida,
+        kekeruhan: formInfoWater?.getFieldsValue()?.kekeruhan,
+        fluorida: formInfoWater?.getFieldsValue()?.fluorida,
+        ph: formInfoWater?.getFieldsValue()?.ph,
+        kesadahan: formInfoWater?.getFieldsValue()?.kesadahan,
+        sulfat: formInfoWater?.getFieldsValue()?.sulfat,
+        suhu: formInfoWater?.getFieldsValue()?.suhu
+      };
 
-    post(apiUrls.WATER_QUALITY_URL, body).then(async response => {
-      const { status } = response
-      if (status === 200) {
-        toast.success(<Toast message='Success' detailedMessage='Berhasil menyimpan data' />);
-        navigate('/manage-water')
-      } else {
-        toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+      if (id) {
+        put(`${apiUrls.WATER_QUALITY_URL}/${id}`, body).then(async response => {
+          const { status } = response
+          if (status === 200) {
+            toast.success(<Toast message='Success' detailedMessage='Berhasil merubah data' />);
+            navigate('/manage-water')
+          } else {
+            toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+          }
+        })
+
+        return
       }
+
+      post(apiUrls.WATER_QUALITY_URL, body).then(async response => {
+        const { status } = response
+        if (status === 200) {
+          toast.success(<Toast message='Success' detailedMessage='Berhasil menyimpan data' />);
+          navigate('/manage-water')
+        } else {
+          toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+        }
+      })
+    }).catch(() => {
+      return
     })
   }
 
@@ -83,6 +102,10 @@ const ManageWaterForm = () => {
 
   const getKelurahan = async (id) => {
     const found = optKecamatan.findIndex(el => el?.value === id)
+    formInfoWater.setFieldsValue({
+      ...formInfoWater,
+      kelurahan: null
+    })
     if (found !== -1) {
       setSelectedKecamatan(optKecamatan[found])
     }
@@ -138,6 +161,7 @@ const ManageWaterForm = () => {
       const { status, data } = response
       if (status === 200) {
         const title = data?.file?.file?.split('/')
+        setExistingData(data?.data)
         setDataFile({
           ...data?.file,
           title: title[1],
@@ -279,7 +303,7 @@ const ManageWaterForm = () => {
                 label="Unggah Dokumen"
                 className={`font-bold ${id ? 'col-span-2' : ''}`}
                 name='dokumen'
-                rules={[{ required: true, message: 'Dokumen wajib diisi!' }]}
+                rules={[{ required: id ? false : true, message: 'Dokumen wajib diisi!' }]}
               >
                 <Dragger
                   style={{ backgroundColor: 'white', padding: '5px' }}
