@@ -322,10 +322,13 @@ const ManageWaterForm = () => {
               </Form.Item>
               {
                 id ?
-                  <div className="bg-white rounded-lg my-auto h-[77%] flex justify-center items-center">
-                    {
-                      <a onClick={() => downloadFile(dataFile?.id)}>{dataFile?.title}</a>
-                    }
+                  <div>
+                    <p className="mb-2 font-bold">Lampiran Dokumen</p>
+                    <div className="bg-white rounded-lg my-auto h-[77%] flex justify-center items-center">
+                      {
+                        <a onClick={() => downloadFile(dataFile?.id)}>{dataFile?.title}</a>
+                      }
+                    </div>
                   </div> :
                   <></>
               }
