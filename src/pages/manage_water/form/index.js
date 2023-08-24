@@ -1,13 +1,14 @@
 import { Input, Form, Select, Upload, InputNumber, ConfigProvider, Button } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import Toast from "../../../components/Toast";
 import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
-import { post } from '../../../api'
+import { post, get } from '../../../api'
 import { apiUrls } from "../../../constant";
 
 const ManageWaterForm = () => {
+  const { id } = useParams()
   const { pathname } = useLocation();
   const navigate = useNavigate()
   const [formInfoWater] = Form.useForm()
@@ -19,6 +20,7 @@ const ManageWaterForm = () => {
   const [selectedKelurahan, setSelectedKelurahan] = useState({});
   const [idDokumen, setIdDokumen] = useState('');
   const [title, setTitle] = useState('Tambah Data');
+  const [dataFile, setDataFile] = useState({})
   const optionsKota = [
     {
       value: '3273',
@@ -131,10 +133,73 @@ const ManageWaterForm = () => {
     }
   }
 
+  const getDataById = () => {
+    get(`${apiUrls.WATER_QUALITY_URL}/${id}`).then(async response => {
+      const { status, data } = response
+      if (status === 200) {
+        const title = data?.file?.file?.split('/')
+        setDataFile({
+          ...data?.file,
+          title: title[1],
+          id: data?.data?.id_dokumen
+        })
+        getKelurahan(data?.data?.id_kecamatan)
+        formInfoWater.setFieldsValue({
+          ...formInfoWater,
+          nama_sumur: data?.data?.nama_sumur,
+          kecamatan: data?.data?.id_kecamatan,
+          kelurahan: data?.data?.id_kelurahan,
+          alamat: data?.data?.alamat,
+          zat_organik: data?.data?.zat_organik,
+          tds: data?.data?.tds,
+          mangan: data?.data?.mangan,
+          klorida: data?.data?.klorida,
+          fluorida: data?.data?.fluorida,
+          ph: data?.data?.ph,
+          kesadahan: data?.data?.kesadahan,
+          sulfat: data?.data?.sulfat,
+          suhu: data?.data?.suhu
+        })
+        setTimeout(() => {
+          formInfoWater.setFieldsValue({
+            ...formInfoWater,
+            kekeruhan: data?.data?.kekeruhan,
+          })
+        }, 500)
+      } else {
+        toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+      }
+    })
+  }
+
+  const downloadFile = () => {
+    let query = {
+      responseType: 'blob',
+      query: {}
+    }
+    get(`${apiUrls.WATER_QUALITY_URL}/download/${dataFile?.id}`, query).then(async response => {
+      const { status } = response
+      if (status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]), { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${dataFile?.title}`);
+        document.body.appendChild(link);
+        link.click();
+      } else {
+        toast.error(<Toast message='Error' detailedMessage={response?.data?.detail} />);
+      }
+    })
+  }
+
   useEffect(() => {
     setInitialValue();
     setTitlePage();
     getKecamatan();
+
+    if (pathname.includes('edit')) {
+      getDataById(id)
+    }
   }, [])
 
   return (
@@ -209,27 +274,38 @@ const ManageWaterForm = () => {
                 style={{ height: '181px' }}
               />
             </Form.Item>
-            <Form.Item
-              label="Unggah Dokumen"
-              className="font-bold"
-              name='dokumen'
-              rules={[{ required: true, message: 'Dokumen wajib diisi!' }]}
-            >
-              <Dragger
-                style={{ backgroundColor: 'white', padding: '5px' }}
-                maxCount={1}
-                accept=".pdf"
-                customRequest={uploadFile}
+            <div className={`${id ? 'grid grid-cols-3 gap-5' : ''}`}>
+              <Form.Item
+                label="Unggah Dokumen"
+                className={`font-bold ${id ? 'col-span-2' : ''}`}
+                name='dokumen'
+                rules={[{ required: true, message: 'Dokumen wajib diisi!' }]}
               >
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">Klik atau seret file ke area ini untuk mengunggah</p>
-                <p className="ant-upload-hint">
-                  Dukungan untuk satu unggahan. Dilarang keras mengunggah data perusahaan atau file terlarang lainnya.
-                </p>
-              </Dragger>
-            </Form.Item>
+                <Dragger
+                  style={{ backgroundColor: 'white', padding: '5px' }}
+                  maxCount={1}
+                  accept=".pdf"
+                  customRequest={uploadFile}
+                >
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-text">Klik atau seret file ke area ini untuk mengunggah</p>
+                  <p className="ant-upload-hint">
+                    Dukungan untuk satu unggahan. Dilarang keras mengunggah data perusahaan atau file terlarang lainnya.
+                  </p>
+                </Dragger>
+              </Form.Item>
+              {
+                id ?
+                  <div className="bg-white rounded-lg my-auto h-[77%] flex justify-center items-center">
+                    {
+                      <a onClick={() => downloadFile(dataFile?.id)}>{dataFile?.title}</a>
+                    }
+                  </div> :
+                  <></>
+              }
+            </div>
           </div>
         </div>
         <div className="bg-[#EAF3FA] rounded-xl mt-10 p-3">
@@ -363,8 +439,8 @@ const ManageWaterForm = () => {
             </Button>
           </ConfigProvider>
         </div>
-      </Form>
-    </div>
+      </Form >
+    </div >
   )
 }
 
