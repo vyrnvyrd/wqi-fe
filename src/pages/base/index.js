@@ -62,7 +62,7 @@ const Base = () => {
             </div>
             {
               isExpand ?
-                <p className="ml-[20px] my-auto truncate">Kelola Kualitas Air</p> :
+                <p className="ml-[20px] my-auto truncate">Manage Water Quality</p> :
                 <></>
             }
           </div>

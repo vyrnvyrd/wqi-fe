@@ -13,17 +13,17 @@ const ManageWater = () => {
 
   const columns = [
     {
-      title: 'Nama Sumur',
+      title: 'Name',
       key: 'nama_sumur',
       dataIndex: 'nama_sumur',
     },
     {
-      title: 'Alamat Sumur',
+      title: 'Address',
       key: 'alamat',
       dataIndex: 'alamat',
     },
     {
-      title: 'Kualitas Air',
+      title: 'Water Quality',
       key: 'class_data',
       dataIndex: 'class_data',
       render: (data, record) => {
@@ -39,7 +39,7 @@ const ManageWater = () => {
               `
             }
           >
-            {data === 0 ? 'Good' : data === 1 ? 'Slightly Polluted' : data === 2 ? 'Fairly Polluted' : 'Heavily Polluted'}
+            {data === 0 ? 'Potable' : data === 1 ? 'Slightly Polluted' : data === 2 ? 'Fairly Polluted' : 'Heavily Polluted'}
           </div>
         );
       }
@@ -76,8 +76,8 @@ const ManageWater = () => {
   return (
     <div>
       <div>
-        <p className="text-[25px] font-bold">Kelola Kualitas Air</p>
-        <p className="text-[15px]"><span className="text-[#FA9746]">Kelola Kualitas Air </span>/<span className="text-[#808080]"> Daftar</span></p>
+        <p className="text-[25px] font-bold">Manage Water Quality</p>
+        <p className="text-[15px]"><span className="text-[#FA9746]">Manage Water Quality </span>/<span className="text-[#808080]"> List</span></p>
       </div>
       <div className="bg-[#EAF3FA] rounded-xl mt-10 p-7">
         <ConfigProvider
@@ -88,7 +88,7 @@ const ManageWater = () => {
           }}
         >
           <Button onClick={() => navigate('/manage-water/create')} type='text' htmlType="submit" className='bg-[#F7B648] text-white font-bold h-[40px]'>
-            Tambah Data
+            Add Data
           </Button>
         </ConfigProvider>
 

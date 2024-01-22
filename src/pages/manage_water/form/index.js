@@ -19,13 +19,13 @@ const ManageWaterForm = () => {
   const [selectedKecamatan, setSelectedKecamatan] = useState({});
   const [selectedKelurahan, setSelectedKelurahan] = useState({});
   const [idDokumen, setIdDokumen] = useState('');
-  const [title, setTitle] = useState('Tambah Data');
+  const [title, setTitle] = useState('Add Data');
   const [dataFile, setDataFile] = useState({})
   const [existingData, setExistingData] = useState({})
   const optionsKota = [
     {
       value: '3273',
-      label: 'KOTA BANDUNG'
+      label: 'BANDUNG'
     }
   ]
 
@@ -230,26 +230,26 @@ const ManageWaterForm = () => {
     <div>
       <Form form={formInfoWater} layout="vertical" onFinishFailed={onFinishFailed}>
         <div>
-          <p className="text-[25px] font-bold">Kelola Kualitas Air</p>
-          <p className="text-[15px]"><span className="text-[#FA9746]">Kelola Kualitas Air </span>/<span className="text-[#808080]"> {title}</span></p>
+          <p className="text-[25px] font-bold">Manage Water Quality</p>
+          <p className="text-[15px]"><span className="text-[#FA9746]">Manage Water Quality </span>/<span className="text-[#808080]"> {title}</span></p>
         </div>
 
         <div className="bg-[#EAF3FA] rounded-xl mt-10 p-3">
-          <p className="font-bold">Info Sumur</p>
+          <p className="font-bold">Water Info</p>
           <div className="grid grid-cols-2 gap-x-5 mt-4">
             <Form.Item
-              label="Nama Sumur"
+              label="Name"
               className="font-bold"
               name="nama_sumur"
               rules={[{ required: true, message: 'Nama Sumur wajib diisi!' }]}
             >
               <Input
                 className="font-normal h-[40px]"
-                placeholder="Isi nama sumur"
+                placeholder="Enter name"
               />
             </Form.Item>
             <Form.Item
-              label="Kota"
+              label="City"
               className="font-bold"
               name="kota"
             >
@@ -260,47 +260,47 @@ const ManageWaterForm = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Kecamatan"
+              label="Subdistrict"
               className="font-bold"
               name='kecamatan'
               rules={[{ required: true, message: 'Kecamatan wajib diisi!' }]}
             >
               <Select
                 className="font-normal"
-                placeholder="Pilih kecamatan"
+                placeholder="Select subdistrict"
                 options={optKecamatan}
                 onChange={getKelurahan}
               />
             </Form.Item>
             <Form.Item
-              label="Kelurahan"
+              label="Urban Village"
               className="font-bold"
               name='kelurahan'
               rules={[{ required: true, message: 'Kelurahan wajib diisi!' }]}
             >
               <Select
                 className="font-normal"
-                placeholder="Pilih kelurahan"
+                placeholder="Select urban village"
                 onChange={onChangeKelurahan}
                 options={optKelurahan}
                 disabled={!formInfoWater?.getFieldsValue()?.kecamatan}
               />
             </Form.Item>
             <Form.Item
-              label="Alamat"
+              label="Address"
               className="font-bold"
               name="alamat"
               rules={[{ required: true, message: 'Alamat wajib diisi!' }]}
             >
               <TextArea
                 className="font-normal"
-                placeholder="Isi alamat"
+                placeholder="Enter address"
                 style={{ height: '181px' }}
               />
             </Form.Item>
             <div className={`${id ? 'grid grid-cols-3 gap-5' : ''}`}>
               <Form.Item
-                label="Unggah Dokumen"
+                label="Upload Documents"
                 className={`font-bold ${id ? 'col-span-2' : ''}`}
                 name='dokumen'
                 rules={[{ required: id ? false : true, message: 'Dokumen wajib diisi!' }]}
@@ -314,16 +314,16 @@ const ManageWaterForm = () => {
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
-                  <p className="ant-upload-text">Klik atau seret file ke area ini untuk mengunggah</p>
+                  <p className="ant-upload-text">Click or drag files into this area to upload</p>
                   <p className="ant-upload-hint">
-                    Dukungan untuk satu unggahan. Dilarang keras mengunggah data perusahaan atau file terlarang lainnya.
+                    Support for single upload. Uploading company data or other prohibited files is strictly prohibited.
                   </p>
                 </Dragger>
               </Form.Item>
               {
                 id ?
                   <div>
-                    <p className="mb-2 font-bold">Lampiran Dokumen</p>
+                    <p className="mb-2 font-bold">Document Attachments</p>
                     <div className="bg-white rounded-lg my-auto h-[77%] flex justify-center items-center">
                       {
                         <a onClick={() => downloadFile(dataFile?.id)}>{dataFile?.title}</a>
@@ -336,72 +336,72 @@ const ManageWaterForm = () => {
           </div>
         </div>
         <div className="bg-[#EAF3FA] rounded-xl mt-10 p-3">
-          <p className="font-bold">Analisis Air</p>
+          <p className="font-bold">Water Analysis</p>
           <div className="grid grid-cols-4 gap-x-5 mt-4">
             <Form.Item
-              label="Zat Organik (mg/l)"
+              label="Organic (mg/l)"
               className="font-bold"
               name='zat_organik'
               rules={[{ required: true, message: 'Zat organik wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi zat organik"
+                placeholder="Enter organic"
               />
             </Form.Item>
             <Form.Item
-              label="Zat padat terlarut (mg/l)"
+              label="TDS (mg/l)"
               className="font-bold"
               name='tds'
               rules={[{ required: true, message: 'Zat padat terlarut wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi zat padat terlarut"
+                placeholder="Enter tds"
               />
             </Form.Item>
             <Form.Item
-              label="Mangan (mg/l)"
+              label="Manganese (mg/l)"
               className="font-bold"
               name='mangan'
               rules={[{ required: true, message: 'Mangan wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi mangan"
+                placeholder="Enter manganese"
               />
             </Form.Item>
             <Form.Item
-              label="Klorida (mg/l)"
+              label="Chloride (mg/l)"
               className="font-bold"
               name='klorida'
               rules={[{ required: true, message: 'Klorida wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi klorida"
+                placeholder="Enter chloride"
               />
             </Form.Item>
             <Form.Item
-              label="Kekeruhan (NTU)"
+              label="Turbidity (NTU)"
               className="font-bold"
               name='kekeruhan'
               rules={[{ required: true, message: 'Kekeruhan wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi kekeruhan"
+                placeholder="Enter turbidity"
               />
             </Form.Item>
             <Form.Item
-              label="Fluorida (mg/l)"
+              label="Fluoride (mg/l)"
               className="font-bold"
               name='fluorida'
               rules={[{ required: true, message: 'Fluorida wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi fluorida"
+                placeholder="Enter fluoride"
               />
             </Form.Item>
             <Form.Item
@@ -412,40 +412,40 @@ const ManageWaterForm = () => {
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi pH"
+                placeholder="enter ph"
               />
             </Form.Item>
             <Form.Item
-              label="Kesadahan (mg/l)"
+              label="Total hardness (mg/l)"
               className="font-bold"
               name='kesadahan'
               rules={[{ required: true, message: 'Kesadahan wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi kesadahan"
+                placeholder="Enter total hardness"
               />
             </Form.Item>
             <Form.Item
-              label="Sulfat (mg/l)"
+              label="Sulfate (mg/l)"
               className="font-bold"
               name='sulfat'
               rules={[{ required: true, message: 'Sulfat wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi sulfat"
+                placeholder="Enter sulfate"
               />
             </Form.Item>
             <Form.Item
-              label="Suhu (C)"
+              label="Temperature (C)"
               className="font-bold"
               name='suhu'
               rules={[{ required: true, message: 'Suhu wajib diisi!' }]}
             >
               <InputNumber
                 className="font-normal h-[40px] w-full"
-                placeholder="Isi suhu"
+                placeholder="Enter temperature"
               />
             </Form.Item>
           </div>
@@ -459,10 +459,10 @@ const ManageWaterForm = () => {
             }}
           >
             <Button onClick={() => navigate('/manage-water')} type='text' className='button-cancel mr-5 font-bold h-[40px]'>
-              Kembali
+              Back
             </Button>
             <Button onClick={onSubmit} type='text' htmlType="submit" className='bg-[#F7B648] text-white font-bold h-[40px]'>
-              Simpan
+              Save
             </Button>
           </ConfigProvider>
         </div>
